@@ -10,60 +10,73 @@
 //import jakarta.persistence.ManyToOne;
 //import jakarta.persistence.Table;
 //import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.NotNull;
 //import lombok.AllArgsConstructor;
 //import lombok.Getter;
 //import lombok.NoArgsConstructor;
 //import lombok.Setter;
 //import lombok.ToString;
-//import org.hibernate.annotations.CreationTimestamp;
 //
+//import java.math.BigDecimal;
 //import java.sql.Date;
 //import java.util.UUID;
 //
 //@AllArgsConstructor
 //@NoArgsConstructor
-//@ToString
 //@Getter
 //@Setter
 //@Entity
-//@Table(name = "san_pham")
-//public class SanPham {
+//@Table(name = "chi_tiet_san_pham")
+//public class ChiTietSanPham {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.UUID)
-//    @Column(name = "id_san_pham")
+//    @Column(name = "id_chi_tiet_san_pham")
 //    private UUID id;
 //
-//    @Column(name = "ma_san_pham")
+//    @Column(name = "ma_chi_tiet_san_pham")
 //    private String ma;
 //
-//    @NotBlank(message = "Không để trống thông tin")
-//    @Column(name = "ten_san_pham")
-//    private String tenSP;
+//    @NotNull(message = "Không để trống thông tin")
+//    @Column(name = "don_gia")
+//    private BigDecimal donGia;
 //
-//    @CreationTimestamp
+//    @NotNull(message = "Không để trống thông tin")
+//    @Column(name = "so_luong_ton")
+//    private int soLuongTon;
+//
 //    @Column(name = "ngay_tao")
 //    private Date ngayTao;
 //
 //    @Column(name = "ngay_cap_nhat")
 //    private Date ngayCapNhat;
 //
-//    @Column(name = "trang_thai")
-//    private int trangThai;
-//
 //    @NotBlank(message = "Không để trống thông tin")
 //    @Column(name = "mo_ta")
 //    private String moTa;
 //
+//    @Column(name = "trang_thai")
+//    private int trangThai;
+//
+//    @Column(name = "is_delete")
+//    private int isDelete;
+//
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id_hinh_anh")
+//    @JoinColumn(name = "san_pham_id")
+//    private SanPham sanPham;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "mau_sac_id")
+//    private MauSac mauSac;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "kich_thuoc_id")
+//    private KichThuoc kichThuoc;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "chat_lieu_id")
+//    private ChatLieu chatLieu;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "hinh_anh_id")
 //    private HinhAnh hinhAnh;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id_thuong_hieu")
-//    private ThuongHieu thuongHieu;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id_loai")
-//    private PhanLoai phanLoai;
-//
 //}
