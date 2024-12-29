@@ -1,21 +1,10 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.models.ChiTietSanPham;
-import com.example.demo.models.GioHangChiTiet;
-import com.example.demo.models.HoaDon;
-import com.example.demo.models.HoaDonChiTiet;
-import com.example.demo.models.KhachHang;
-import com.example.demo.models.LichSuTrangThai;
-import com.example.demo.models.NhanVien;
+import com.example.demo.models.*;
 import com.example.demo.models.dto.BanHangRequest;
 import com.example.demo.models.dto.HoaDonRequest;
 import com.example.demo.models.dto.SanPhamAddHoaDon;
-import com.example.demo.repositories.ChiTietSanPhamRepository;
-import com.example.demo.repositories.GioHangChiTietRepository;
-import com.example.demo.repositories.HoaDonChiTietRepository;
-import com.example.demo.repositories.HoaDonRepository;
-import com.example.demo.repositories.KhuyenMaiRepository;
-import com.example.demo.repositories.LichSuTrangThaiRepository;
+import com.example.demo.repositories.*;
 import com.example.demo.services.BanHangOnlineService;
 import com.example.demo.util.UserLoginCommon;
 import jakarta.transaction.Transactional;

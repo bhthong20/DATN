@@ -1,6 +1,8 @@
 package com.example.demo.services.impl;
 
+import com.example.demo.models.ChiTietSanPham;
 import com.example.demo.models.ChucVu;
+import com.example.demo.models.NhanVien;
 import com.example.demo.repositories.ChucVuRepository;
 import com.example.demo.services.ChucVuService;
 import org.springframework.beans.BeanUtils;

@@ -71,18 +71,18 @@ public class HoaDonChiTietController {
         model.addAttribute("hoaDonCT", hoaDonCT1);
         return "hoa-don-chi-tiet/update";
     }
-    @PostMapping("/update/{id}")
-    public String update(@ModelAttribute( "hoaDonCT") HoaDonChiTiet hoaDonCT,
-                         @PathVariable("id") UUID id) {
-        HoaDonChiTiet hoaDonCT1 = hoaDonChiTietService.findById(id);
-        hoaDonCT1.setId(id);
-        hoaDonChiTietService.update(id, hoaDonCT1);
-        return "redirect:/hoa-don-chi-tiet/hien-thi";
-    }
+        @PostMapping("/update/{id}")
+        public String update(@ModelAttribute( "hoaDonCT") HoaDonChiTiet hoaDonCT,
+                @PathVariable("id") UUID id) {
+            HoaDonChiTiet hoaDonCT1 = hoaDonChiTietService.findById(id);
+            hoaDonCT1.setId(id);
+            hoaDonChiTietService.update(id, hoaDonCT1);
+            return "redirect:/hoa-don-chi-tiet/hien-thi";
+        }
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") UUID id) {
         hoaDonChiTietService.delete(id);
         return "redirect:/hoa-don-chi-tiet/hien-thi";
     }
-}
+    }
 

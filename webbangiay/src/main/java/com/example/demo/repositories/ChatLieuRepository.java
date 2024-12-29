@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface ChatLieuRepository extends JpaRepository<ChatLieu, UUID> {
-    @Query("select cl from ChatLieu cl where cl.ma like %:search% or cl.tenChatLieu like %:search%")
-    List<ChatLieu> search(String search);
+   @Query("select cl from ChatLieu cl where cl.ma like %:search% or cl.tenChatLieu like %:search%")
+   List<ChatLieu> search(String search);
 }

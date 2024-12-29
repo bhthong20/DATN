@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.models.MauSac;
+import com.example.demo.models.ThuongHieu;
 import com.example.demo.services.MauSacService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

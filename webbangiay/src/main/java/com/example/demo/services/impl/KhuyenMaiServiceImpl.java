@@ -3,6 +3,7 @@ package com.example.demo.services.impl;
 import com.example.demo.models.KhuyenMai;
 import com.example.demo.repositories.KhuyenMaiRepository;
 import com.example.demo.services.KhuyenMaiService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

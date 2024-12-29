@@ -13,6 +13,7 @@ import com.example.demo.models.dto.ThongKeTongDto;
 import com.example.demo.repositories.ChiTietSanPhamRepository;
 import com.example.demo.repositories.SanPhamRepository;
 import com.example.demo.repositories.ThongKeRepository;
+import com.example.demo.services.BanHangTaiQuayService;
 import com.example.demo.services.ThongKeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
