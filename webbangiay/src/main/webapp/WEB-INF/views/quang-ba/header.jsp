@@ -78,7 +78,7 @@
         <div class="container justify-content-between p-0">
             <div class="d-flex">
                 <div class="site-brand">
-                    <a href=""><img src="/uploads/Diamond_Sneaker-removebg.png"></a>
+                    <a href="/home"><img src="/uploads/Diamond_Sneaker-removebg.png"></a>
                 </div>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                     <ul class="navbar-nav text-center mb-2 mb-lg-0">
@@ -99,7 +99,14 @@
                     <ul class="dropdown-menu" id="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
                         <li><a class="dropdown-item" href="/khach-hang/thong-tin-ca-nhan">Tài Khoản Của Tôi</a></li>
-                        <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                        <li>
+                            <a class="dropdown-item" href="/logout" onclick="clearUserInfoCookie()">Đăng xuất</a>
+                        </li>
+                        <script>
+                            function clearUserInfoCookie() {
+                                document.cookie = "user_info=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                            }
+                        </script>
                     </ul>
                     <a href="/gio-hang" class="position-relative"><i style="font-size: 30px; background-color: #8c8c8cư" class='bx bx-cart'></i>
                         <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
