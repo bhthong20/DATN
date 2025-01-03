@@ -40,6 +40,8 @@ public class SecurityConfig {
                 .requestMatchers("/vnpay-payment/**").permitAll()
                 .requestMatchers("/payment/**").permitAll()
                 .requestMatchers("/san-pham/**").permitAll()
+                .requestMatchers("/khach-hang/**").permitAll()
+                .requestMatchers("/khach-hang/thong-tin-ca-nhan").permitAll()
                 .requestMatchers("/gio-hang/**").hasRole("USER")
                 //.requestMatchers("/**").permitAll()
 
@@ -48,6 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/khuyen-mai/**", "/thuong-hieu/**", "/chat-lieu/**",
                         "/kich-thuoc/**", "/mau-sac/**", "/loai/**",
                         "/chi-tiet-san-pham/**").hasAnyRole("STAFF")
+                .requestMatchers("/hoa-don/**").hasAnyRole("STAFF")
 
                 // Quyền dành cho admin
                 .requestMatchers("/thong-ke/**").hasRole("ADMIN") // Thống kê
