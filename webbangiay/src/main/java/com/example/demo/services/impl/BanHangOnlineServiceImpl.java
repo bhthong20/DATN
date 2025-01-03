@@ -317,64 +317,215 @@ public class BanHangOnlineServiceImpl implements BanHangOnlineService {
         }
     }
 
+
     @Override
     @Transactional
     public Boolean thayDoiTrangThaiHoaDon(UUID idHoaDon, int trangThai) throws BadRequestException {
-        HoaDon hoaDon = hoaDonRepository.findById(idHoaDon).get();
-        if (common.getUserLoginType().equals("ADMIN")) {
-            hoaDon.setNhanVien((NhanVien) common.getUserLogin());
+        // Lấy hóa đơn từ database
+        HoaDon hoaDon = hoaDonRepository.findById(idHoaDon)
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
+
+        // Xác định vai trò và người dùng hiện tại
+        Object userLogin = common.getUserLogin();
+        String userLoginType = common.getUserLoginType();
+
+        // Phân quyền theo vai trò
+        if ("ADMIN".equals(userLoginType) || "STAFF".equals(userLoginType)) {
+            // ADMIN hoặc STAFF có toàn quyền
+            if (userLogin instanceof NhanVien) {
+                hoaDon.setNhanVien((NhanVien) userLogin); // Nhân viên thực hiện thay đổi trạng thái
+            } else {
+                throw new BadRequestException("Người dùng hiện tại không có quyền thay đổi trạng thái hóa đơn.");
+            }
+
+            // Logic cập nhật trạng thái khi xác nhận đơn hàng (trạng thái = 1)
+            if (trangThai == 1) {
+                List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon(hoaDon);
+                List<ChiTietSanPham> listChiTiet = new ArrayList<>();
+
+                for (HoaDonChiTiet el : list) {
+                    ChiTietSanPham chiTietSanPham = el.getChiTietSanPham();
+                    if (chiTietSanPham != null) {
+                        // Kiểm tra tồn kho
+                        if (chiTietSanPham.getSoLuongTon() < el.getSoLuong()) {
+                            throw new BadRequestException("Sản phẩm " + chiTietSanPham.getSanPham().getTenSP() +
+                                    " không còn đủ số lượng. Tồn kho hiện tại: " + chiTietSanPham.getSoLuongTon());
+                        }
+                        // Cập nhật tồn kho
+                        chiTietSanPham.setSoLuongTon(chiTietSanPham.getSoLuongTon() - el.getSoLuong());
+                        listChiTiet.add(chiTietSanPham);
+                    }
+                }
+                // Lưu cập nhật tồn kho
+                chiTietSanPhamRepository.saveAll(listChiTiet);
+            }
+
+        } else if ("USER".equals(userLoginType)) {
+            // USER chỉ có thể cập nhật trạng thái "Đã nhận được hàng" (trangThai = 2)
+//            if (!(userLogin instanceof KhachHang) || !hoaDon.getKhachHang().equals(userLogin)) {
+//                throw new BadRequestException("Bạn không có quyền thay đổi trạng thái hóa đơn này.");
+//            }
+
+//            if (trangThai != 6) {
+//                throw new BadRequestException("Bạn chỉ có thể xác nhận trạng thái 'Đã nhận được hàng'.");
+//            }
+            hoaDon.setKhachHang((KhachHang) userLogin); // Ghi nhận khách hàng đã nhận hàng
         } else {
-            hoaDon.setKhachHang((KhachHang) common.getUserLogin());
+            throw new BadRequestException("Bạn không có quyền thực hiện thao tác này.");
         }
+
+        // Logic xử lý trạng thái hủy đơn (trạng thái = 8)
         if (trangThai == 8 && hoaDon.getTrangThai() == 1) {
             List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon(hoaDon);
-
             List<ChiTietSanPham> listChiTiet = new ArrayList<>();
 
             for (HoaDonChiTiet el : list) {
                 ChiTietSanPham chiTietSanPham = el.getChiTietSanPham();
                 if (chiTietSanPham != null) {
-                    el.getChiTietSanPham().setSoLuongTon(el.getChiTietSanPham().getSoLuongTon() + el.getSoLuong());
-                    listChiTiet.add(el.getChiTietSanPham());
+                    // Hoàn lại số lượng vào kho
+                    chiTietSanPham.setSoLuongTon(chiTietSanPham.getSoLuongTon() + el.getSoLuong());
+                    listChiTiet.add(chiTietSanPham);
                 }
             }
-
             chiTietSanPhamRepository.saveAll(listChiTiet);
         }
+
+        // Cập nhật trạng thái hóa đơn
         hoaDon.setTrangThai(trangThai);
         hoaDon.setNgayCapNhat(LocalDateTime.now());
-        if (trangThai == 1) {
-            List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon(hoaDon);
 
-            List<ChiTietSanPham> listChiTiet = new ArrayList<>();
-
-            for (HoaDonChiTiet el : list) {
-                ChiTietSanPham chiTietSanPham = el.getChiTietSanPham();
-                if (chiTietSanPham != null) {
-                    if (el.getChiTietSanPham().getSoLuongTon() - el.getSoLuong() < 0) {
-                        throw new BadRequestException("Sản phẩm " + chiTietSanPham.getSanPham().getTenSP() +
-                                ". Có màu " + chiTietSanPham.getMauSac().getTen() +
-                                ". Có kích cớ: " + chiTietSanPham.getKichThuoc().getSize() +
-                                ". Có chất liệu: " + chiTietSanPham.getChatLieu().getTenChatLieu() +
-                                ". Không còn đủ số lượng");
-                    }
-                    el.getChiTietSanPham().setSoLuongTon(el.getChiTietSanPham().getSoLuongTon() - el.getSoLuong());
-                    listChiTiet.add(el.getChiTietSanPham());
-                }
-            }
-
-            chiTietSanPhamRepository.saveAll(listChiTiet);
-        }
-
-        // lưu lại lịch sử trạng thái
+        // Lưu lịch sử trạng thái
         LichSuTrangThai lichSuTrangThai = new LichSuTrangThai();
         lichSuTrangThai.setTrangThai(trangThai);
         lichSuTrangThai.setHoaDon(hoaDon);
         lichSuTrangThai.setIsDelete(1);
         lichSuTrangThaiRepository.save(lichSuTrangThai);
 
+        // Lưu hóa đơn
+        hoaDonRepository.save(hoaDon);
+
         return true;
     }
+
+
+
+
+//    @Override
+//    @Transactional
+//    public Boolean thayDoiTrangThaiHoaDon(UUID idHoaDon, int trangThai) throws BadRequestException {
+//        // Lấy hóa đơn từ database
+//        HoaDon hoaDon = hoaDonRepository.findById(idHoaDon)
+//                .orElseThrow(() -> new BadRequestException("Không tìm thấy hóa đơn với ID: " + idHoaDon));
+//
+//        // Xác định vai trò của người đăng nhập
+//        Object userLogin = common.getUserLogin();
+//        if ("ADMIN".equals(common.getUserLoginType()) || "STAFF".equals(common.getUserLoginType())) {
+//            if (userLogin instanceof NhanVien) {
+//                hoaDon.setNhanVien((NhanVien) userLogin); // Nhân viên thực hiện thay đổi trạng thái
+//            } else {
+//                throw new BadRequestException("Người dùng hiện tại không có quyền thay đổi trạng thái hóa đơn.");
+//            }
+//        } else {
+//            throw new BadRequestException("Chỉ ADMIN hoặc STAFF mới có thể thực hiện xác nhận đơn hàng.");
+//        }
+//
+//        // Logic xác nhận trạng thái "Xác nhận đơn hàng"
+//        if (trangThai == 1) { // Trạng thái xác nhận đơn hàng
+//            List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon(hoaDon);
+//            List<ChiTietSanPham> listChiTiet = new ArrayList<>();
+//
+//            for (HoaDonChiTiet el : list) {
+//                ChiTietSanPham chiTietSanPham = el.getChiTietSanPham();
+//                if (chiTietSanPham != null) {
+//                    // Kiểm tra tồn kho
+//                    if (chiTietSanPham.getSoLuongTon() < el.getSoLuong()) {
+//                        throw new BadRequestException("Sản phẩm " + chiTietSanPham.getSanPham().getTenSP() +
+//                                " không còn đủ số lượng. Tồn kho hiện tại: " + chiTietSanPham.getSoLuongTon());
+//                    }
+//                    // Cập nhật tồn kho
+//                    chiTietSanPham.setSoLuongTon(chiTietSanPham.getSoLuongTon() - el.getSoLuong());
+//                    listChiTiet.add(chiTietSanPham);
+//                }
+//            }
+//            // Lưu cập nhật tồn kho
+//            chiTietSanPhamRepository.saveAll(listChiTiet);
+//        }
+//
+//        // Cập nhật trạng thái hóa đơn
+//        hoaDon.setTrangThai(trangThai);
+//        hoaDon.setNgayCapNhat(LocalDateTime.now());
+//
+//        // Lưu lịch sử thay đổi trạng thái
+//        LichSuTrangThai lichSuTrangThai = new LichSuTrangThai();
+//        lichSuTrangThai.setTrangThai(trangThai);
+//        lichSuTrangThai.setHoaDon(hoaDon);
+//        lichSuTrangThai.setIsDelete(1);
+//        lichSuTrangThaiRepository.save(lichSuTrangThai);
+//
+//        // Lưu hóa đơn
+//        hoaDonRepository.save(hoaDon);
+//
+//        return true;
+//    }
+//
+//    @Override
+//    @Transactional
+//    public Boolean thayDoiTrangThaiHoaDon(UUID idHoaDon, int trangThai) throws BadRequestException {
+//        HoaDon hoaDon = hoaDonRepository.findById(idHoaDon).get();
+//        if (common.getUserLoginType().equals("ADMIN")) {
+//            hoaDon.setNhanVien((NhanVien) common.getUserLogin());
+//        } else {
+//            hoaDon.setKhachHang((KhachHang) common.getUserLogin());
+//        }
+//        if (trangThai == 8 && hoaDon.getTrangThai() == 1) {
+//            List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon(hoaDon);
+//
+//            List<ChiTietSanPham> listChiTiet = new ArrayList<>();
+//
+//            for (HoaDonChiTiet el : list) {
+//                ChiTietSanPham chiTietSanPham = el.getChiTietSanPham();
+//                if (chiTietSanPham != null) {
+//                    el.getChiTietSanPham().setSoLuongTon(el.getChiTietSanPham().getSoLuongTon() + el.getSoLuong());
+//                    listChiTiet.add(el.getChiTietSanPham());
+//                }
+//            }
+//
+//            chiTietSanPhamRepository.saveAll(listChiTiet);
+//        }
+//        hoaDon.setTrangThai(trangThai);
+//        hoaDon.setNgayCapNhat(LocalDateTime.now());
+//        if (trangThai == 1) {
+//            List<HoaDonChiTiet> list = hoaDonChiTietRepository.findHoaDonChiTietByHoaDon(hoaDon);
+//
+//            List<ChiTietSanPham> listChiTiet = new ArrayList<>();
+//
+//            for (HoaDonChiTiet el : list) {
+//                ChiTietSanPham chiTietSanPham = el.getChiTietSanPham();
+//                if (chiTietSanPham != null) {
+//                    if (el.getChiTietSanPham().getSoLuongTon() - el.getSoLuong() < 0) {
+//                        throw new BadRequestException("Sản phẩm " + chiTietSanPham.getSanPham().getTenSP() +
+//                                ". Có màu " + chiTietSanPham.getMauSac().getTen() +
+//                                ". Có kích cớ: " + chiTietSanPham.getKichThuoc().getSize() +
+//                                ". Có chất liệu: " + chiTietSanPham.getChatLieu().getTenChatLieu() +
+//                                ". Không còn đủ số lượng");
+//                    }
+//                    el.getChiTietSanPham().setSoLuongTon(el.getChiTietSanPham().getSoLuongTon() - el.getSoLuong());
+//                    listChiTiet.add(el.getChiTietSanPham());
+//                }
+//            }
+//
+//            chiTietSanPhamRepository.saveAll(listChiTiet);
+//        }
+//
+//        // lưu lại lịch sử trạng thái
+//        LichSuTrangThai lichSuTrangThai = new LichSuTrangThai();
+//        lichSuTrangThai.setTrangThai(trangThai);
+//        lichSuTrangThai.setHoaDon(hoaDon);
+//        lichSuTrangThai.setIsDelete(1);
+//        lichSuTrangThaiRepository.save(lichSuTrangThai);
+//
+//        return true;
+//    }
 
     @Override
     public Boolean quayLaiTrangThai(UUID idHoaDon) throws BadRequestException {
