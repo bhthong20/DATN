@@ -35,7 +35,7 @@ public class ChucVu {
 
     @NotBlank(message = "Không để trống thông tin")
     @Column(name = "ten_chuc_vu")
-    private String ten;
+    private String tenChucVu;
 
     @CreationTimestamp
     @Column(name = "ngay_tao")

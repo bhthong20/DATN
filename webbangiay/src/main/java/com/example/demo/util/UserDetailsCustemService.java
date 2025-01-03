@@ -32,41 +32,47 @@ public class UserDetailsCustemService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        StringBuilder roleName = new StringBuilder("USER");
-
+        // Kiểm tra tài khoản khách hàng (USER)
         Optional<KhachHang> khachHang = khachHangRepository.findByTaiKhoan(username);
 
-        if (khachHang.isEmpty()) {
+        if (khachHang.isPresent()) {
+            // Mã hóa lại mật khẩu (theo yêu cầu giữ nguyên)
+            String hashedPassword = passwordEncoder.encode(khachHang.get().getMatKhau());
+            khachHang.get().setMatKhau(hashedPassword);
 
-            roleName.setLength(0);
-            roleName.append("ADMIN");
-            Optional<NhanVien> nhanVien = nhanVienRepository.findByTaiKhoan(username);
-
-            if (nhanVien.isEmpty()) {
-                throw new UsernameNotFoundException("Không tìm thấy người dùng với tên đăng nhập: " + username);
-            }
-
-            String hashedPassword = passwordEncoder.encode(nhanVien.get().getMatKhau());
-            nhanVien.get().setMatKhau(hashedPassword);
-            session.setAttribute("USER_LOGIN", nhanVien.get());
-            session.setAttribute("USER_LOGIN_TYPE", "ADMIN");
+            // Lưu thông tin vào session
+            session.setAttribute("USER_LOGIN", khachHang.get());
+            session.setAttribute("USER_LOGIN_TYPE", "USER");
 
             return User.builder()
-                    .username(nhanVien.get().getTaiKhoan())
-                    .password(nhanVien.get().getMatKhau())
-                    .roles(roleName.toString())
+                    .username(khachHang.get().getTaiKhoan())
+                    .password(khachHang.get().getMatKhau())
+                    .roles("USER")
                     .build();
         }
 
-        String hashedPassword = passwordEncoder.encode(khachHang.get().getMatKhau());
-        khachHang.get().setMatKhau(hashedPassword);
-        session.setAttribute("USER_LOGIN", khachHang.get());
-        session.setAttribute("USER_LOGIN_TYPE", "USER");
+        // Kiểm tra tài khoản nhân viên (STAFF/ADMIN)
+        Optional<NhanVien> nhanVien = nhanVienRepository.findByTaiKhoanWithRole(username);
+
+        if (nhanVien.isEmpty()) {
+            throw new UsernameNotFoundException("Không tìm thấy người dùng với tên đăng nhập: " + username);
+        }
+
+        // Lấy vai trò từ bảng `chuc_vu`
+        String roleName = nhanVien.get().getChucVu().getTenChucVu().toUpperCase();
+
+        // Mã hóa lại mật khẩu (theo yêu cầu giữ nguyên)
+        String hashedPassword = passwordEncoder.encode(nhanVien.get().getMatKhau());
+        nhanVien.get().setMatKhau(hashedPassword);
+
+        // Lưu thông tin vào session
+        session.setAttribute("USER_LOGIN", nhanVien.get());
+        session.setAttribute("USER_LOGIN_TYPE", roleName);
 
         return User.builder()
-                .username(khachHang.get().getTaiKhoan())
-                .password(khachHang.get().getMatKhau())
-                .roles(roleName.toString())
+                .username(nhanVien.get().getTaiKhoan())
+                .password(nhanVien.get().getMatKhau())
+                .roles(roleName) // Sử dụng vai trò từ `chuc_vu` (ADMIN/STAFF)
                 .build();
     }
 }

@@ -22,6 +22,8 @@ public class SecurityConfig {
     public SecurityFilterChain config(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().disable()
                 .authorizeRequests()
+
+                // Quyền truy cập công khai
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/WEB-INF/**").permitAll()
                 .requestMatchers("/auth-register").permitAll()
@@ -33,22 +35,23 @@ public class SecurityConfig {
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/scss/**").permitAll()
                 .requestMatchers("/ban-hang-online/rest/count-gio-hang").permitAll()
-//                .requestMatchers("/**").permitAll()
                 .requestMatchers("/user-infor").permitAll()
-                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/thong-ke/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/khuyen-mai/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/thuong-hieu/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/chat-lieu/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/kich-thuoc/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/mau-sac/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/loai/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/loai/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/chi-tiet-san-pham/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/chuc-vu/**").hasAnyRole(RolesConstant.ROLE_ADMIN)
-                .requestMatchers("/vnpay-payment/**").hasAnyRole(RolesConstant.ROLE_USER)
-                .requestMatchers("/payment/**").hasAnyRole(RolesConstant.ROLE_USER)
                 .requestMatchers("/assets/**").permitAll()
+                .requestMatchers("/vnpay-payment/**").permitAll()
+                .requestMatchers("/payment/**").permitAll()
+
+                // Quyền dành cho nhân viên
+                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF") // Nhân viên bán hàng tại quầy
+                .requestMatchers("/khuyen-mai/**", "/thuong-hieu/**", "/chat-lieu/**",
+                        "/kich-thuoc/**", "/mau-sac/**", "/loai/**",
+                        "/chi-tiet-san-pham/**").hasAnyRole("STAFF")
+
+                // Quyền dành cho admin
+                .requestMatchers("/thong-ke/**").hasRole("ADMIN") // Thống kê
+                .requestMatchers("/chuc-vu/**").hasRole("ADMIN") // Quản lý nhân viên
+                .requestMatchers("/**").hasRole("ADMIN") // Mọi thứ khác
+
+                // Các yêu cầu khác phải được xác thực
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
@@ -81,6 +84,8 @@ public class SecurityConfig {
                 // Kiểm tra vai trò của người dùng và chuyển hướng đến đường dẫn tương ứng
                 if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
                     return "/thong-ke"; // Chuyển hướng đến trang "/admin/home" nếu người dùng có vai trò ADMIN
+                } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_STAFF"))) {
+                    return "/ban-hang-tai-quay"; // STAFF chuyển đến trang bán hàng tại quầy
                 } else {
                     return "/home"; // Chuyển hướng đến trang "/home" mặc định
                 }
