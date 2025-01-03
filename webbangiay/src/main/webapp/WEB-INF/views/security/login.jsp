@@ -61,7 +61,7 @@
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
-                        <a href="" class="app-brand-link">
+                        <a href="/home" class="app-brand-link">
                             <img src="/uploads/Diamond_Sneaker-removebg.png">
                         </a>
                         <span class="app-brand-logo demo">
@@ -101,7 +101,7 @@
                                         id="password"
                                         class="form-control"
                                         name="password"
-                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                        placeholder="Password@1"
                                         aria-describedby="password"
                                 />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>

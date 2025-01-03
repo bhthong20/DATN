@@ -39,6 +39,8 @@ public class SecurityConfig {
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/vnpay-payment/**").permitAll()
                 .requestMatchers("/payment/**").permitAll()
+                .requestMatchers("/san-pham/**").permitAll()
+                .requestMatchers("/gio-hang/**").permitAll()
 
                 // Quyền dành cho nhân viên
                 .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF") // Nhân viên bán hàng tại quầy
