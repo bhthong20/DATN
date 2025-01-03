@@ -34,13 +34,14 @@ public class SecurityConfig {
                 .requestMatchers("/home/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/scss/**").permitAll()
-                .requestMatchers("/ban-hang-online/rest/count-gio-hang").permitAll()
+                .requestMatchers("/ban-hang-online/**").permitAll()
                 .requestMatchers("/user-infor").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/vnpay-payment/**").permitAll()
                 .requestMatchers("/payment/**").permitAll()
                 .requestMatchers("/san-pham/**").permitAll()
-                .requestMatchers("/gio-hang/**").permitAll()
+                .requestMatchers("/gio-hang/**").hasRole("USER")
+                //.requestMatchers("/**").permitAll()
 
                 // Quyền dành cho nhân viên
                 .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF") // Nhân viên bán hàng tại quầy
