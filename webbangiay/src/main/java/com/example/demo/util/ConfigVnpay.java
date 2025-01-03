@@ -17,8 +17,8 @@ public class ConfigVnpay {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_ReturnUrl = "http://localhost:8080/ban-hang-online/vnpay-payment";
-    public static String vnp_TmnCode = "GD3LZTWU";
-    public static String secretKey = "BLXGQQFZUTRVJEULWFEPYHTXBEEITQEW";
+    public static String vnp_TmnCode = "XT5DGU6I";
+    public static String secretKey = "WMHL1PEYQS1MZBR5EL2RCBSN4O2TLH1C";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
