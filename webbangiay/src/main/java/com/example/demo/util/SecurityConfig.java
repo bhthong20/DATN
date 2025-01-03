@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/san-pham/**").permitAll()
                 .requestMatchers("/khach-hang/**").permitAll()
                 .requestMatchers("/khach-hang/thong-tin-ca-nhan").permitAll()
+                .requestMatchers("/hoa-don/**").permitAll()
                 .requestMatchers("/gio-hang/**").hasRole("USER")
                 //.requestMatchers("/**").permitAll()
 
