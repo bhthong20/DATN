@@ -47,11 +47,11 @@ public class SecurityConfig {
                 //.requestMatchers("/**").permitAll()
 
                 // Quyền dành cho nhân viên
-                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF") // Nhân viên bán hàng tại quầy
+                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF", "ADMIN") // Nhân viên bán hàng tại quầy
                 .requestMatchers("/khuyen-mai/**", "/thuong-hieu/**", "/chat-lieu/**",
                         "/kich-thuoc/**", "/mau-sac/**", "/loai/**",
-                        "/chi-tiet-san-pham/**").hasAnyRole("STAFF")
-                .requestMatchers("/hoa-don/**").hasAnyRole("STAFF")
+                        "/chi-tiet-san-pham/**").hasAnyRole("STAFF", "ADMIN")
+                .requestMatchers("/hoa-don/**").hasAnyRole("STAFF", "ADMIN")
 
                 // Quyền dành cho admin
                 .requestMatchers("/thong-ke/**").hasRole("ADMIN") // Thống kê

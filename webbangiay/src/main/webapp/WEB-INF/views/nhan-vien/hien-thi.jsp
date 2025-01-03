@@ -132,7 +132,7 @@
                         <c:if test="${nv.gioiTinh == false}">Nam</c:if>
                         <c:if test="${nv.gioiTinh == true}">Nữ</c:if>
                     </td>
-                    <td>${nv.chucVu.ten}</td>
+                    <td>${nv.chucVu.tenChucVu}</td>
                     <td>${nv.diaChi}</td>
                     <td>${nv.canCuoc}</td>
                     <td>${nv.taiKhoan}</td>

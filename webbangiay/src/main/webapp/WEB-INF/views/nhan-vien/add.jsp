@@ -94,7 +94,7 @@
                         <div class="form-floating mb-3 mt-3">
                             <form:select class="form-select" path="chucVu">
                                 <option selected disabled>Sản phẩm</option>
-                                <form:options items="${listCv}" itemValue="id" itemLabel="ten"/>
+                                <form:options items="${listCv}" itemValue="id" itemLabel="tenChucVu"/>
                             </form:select>
                             <form:label class="form-label" path="chucVu">Chức Vụ:</form:label>
                         </div>

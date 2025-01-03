@@ -92,7 +92,7 @@
                 <tr>
                     <td>${stt.index+1}</td>
                     <td>${cv.ma}</td>
-                    <td>${cv.ten}</td>
+                    <td>${cv.tenChucVu}</td>
                     <td>${cv.ngayTao}</td>
                     <td>${cv.ngayCapNhat}</td>
                     <td>${cv.moTa}</td>
