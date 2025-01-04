@@ -47,7 +47,7 @@ public class SecurityConfig {
                 //.requestMatchers("/**").permitAll()
 
                 // Quyền dành cho nhân viên
-                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF", "ADMIN") // Nhân viên bán hàng tại quầy
+                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF") // Nhân viên bán hàng tại quầy
                 .requestMatchers("/khuyen-mai/**", "/thuong-hieu/**", "/chat-lieu/**",
                         "/kich-thuoc/**", "/mau-sac/**", "/loai/**",
                         "/chi-tiet-san-pham/**").hasAnyRole("STAFF", "ADMIN")
@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/thong-ke/**").hasRole("ADMIN") // Thống kê
                 .requestMatchers("/chuc-vu/**").hasRole("ADMIN") // Quản lý nhân viên
                 .requestMatchers("/**").hasRole("ADMIN") // Mọi thứ khác
+
 
                 // Các yêu cầu khác phải được xác thực
                 .anyRequest().authenticated()
