@@ -178,7 +178,7 @@
 
     var userInfoCookie = getCookie("user_info");
     if (userInfoCookie) {
-        $('#taiKhoan').text("Tài khoản");
+        $('#taiKhoan').text(JSON.parse(userInfoCookie));
         // Hiển thị các mục dành cho người dùng đã đăng nhập
         $('#dropdown-menu').html(`
         <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
@@ -190,7 +190,10 @@
             type: "GET",
             url: "/user-infor",
             success: function (response) {
-                $('#taiKhoan').text("Tài khoản");
+                if (response) {
+                    setCookie("user_info", JSON.stringify(response.taiKhoan));
+                    $('#taiKhoan').text(response.taiKhoan)
+                }
                 $('#dropdown-menu').html(`
                 <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
                 <li><a class="dropdown-item" href="/khach-hang/thong-tin-ca-nhan">Tài Khoản Của Tôi</a></li>
