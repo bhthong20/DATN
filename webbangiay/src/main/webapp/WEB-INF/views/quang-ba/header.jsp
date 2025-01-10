@@ -199,7 +199,7 @@
             },
             error: function (xhr, status, error) {
                 if (xhr.status === 401) {
-                    $('#taiKhoan').text("Đăng nhập");
+                    $('#taiKhoan').text("Tài khoản");
                     $('#dropdown-menu').html(`
                     <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
                 `);
