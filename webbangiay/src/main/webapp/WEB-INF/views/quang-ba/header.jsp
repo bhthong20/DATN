@@ -97,24 +97,17 @@
                         <i style="font-size: 30px" class='bx bxs-user'></i> <span id="taiKhoan">Tài khoản</span>
                     </span>
                     <ul class="dropdown-menu" id="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <c:choose>
-                            <c:when test="${not empty user}">
-                                <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
-                                <li><a class="dropdown-item" href="/khach-hang/thong-tin-ca-nhan">Tài Khoản Của Tôi</a></li>
-                                <li><a class="dropdown-item" href="/logout" onclick="clearUserInfoCookie()">Đăng xuất</a></li>
-                            </c:when>
-                            <c:otherwise>
-                                <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
-                            </c:otherwise>
-                        </c:choose>
-                    </ul>
-
-                    <script>
+                        <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
+                        <li><a class="dropdown-item" href="/khach-hang/thong-tin-ca-nhan">Tài Khoản Của Tôi</a></li>
+                        <li>
+                            <a class="dropdown-item" href="/logout" onclick="clearUserInfoCookie()">Đăng xuất</a>
+                        </li>
+                        <script>
                             function clearUserInfoCookie() {
                                 document.cookie = "user_info=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                                window.location.href = "/login"; // Chuyển hướng về trang đăng nhập
                             }
-                    </script>
+                        </script>
+                    </ul>
                     <a href="/gio-hang" class="position-relative"><i style="font-size: 30px; background-color: #8c8c8cư" class='bx bx-cart'></i>
                         <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
                         <span id="soLuongGioHang"></span>
@@ -178,13 +171,7 @@
 
     var userInfoCookie = getCookie("user_info");
     if (userInfoCookie) {
-        $('#taiKhoan').text(JSON.parse(userInfoCookie));
-        // Hiển thị các mục dành cho người dùng đã đăng nhập
-        $('#dropdown-menu').html(`
-        <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
-        <li><a class="dropdown-item" href="/khach-hang/thong-tin-ca-nhan">Tài Khoản Của Tôi</a></li>
-        <li><a class="dropdown-item" href="/logout" onclick="clearUserInfoCookie()">Đăng xuất</a></li>
-    `);
+        $('#taiKhoan').text(JSON.parse(userInfoCookie))
     } else {
         $.ajax({
             type: "GET",
@@ -194,23 +181,12 @@
                     setCookie("user_info", JSON.stringify(response.taiKhoan));
                     $('#taiKhoan').text(response.taiKhoan)
                 }
-                $('#dropdown-menu').html(`
-                <li><a class="dropdown-item" href="/ban-hang-online/hoa-don">Danh Sách Đơn Mua</a></li>
-                <li><a class="dropdown-item" href="/khach-hang/thong-tin-ca-nhan">Tài Khoản Của Tôi</a></li>
-                <li><a class="dropdown-item" href="/logout" onclick="clearUserInfoCookie()">Đăng xuất</a></li>
-            `);
             },
             error: function (xhr, status, error) {
-                if (xhr.status === 401) {
-                    $('#taiKhoan').text("Tài khoản");
-                    $('#dropdown-menu').html(`
-                    <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
-                `);
-                }
+                console.log(xhr.responseText);
             }
         });
     }
-
 
     $.ajax({
         type: "GET",
