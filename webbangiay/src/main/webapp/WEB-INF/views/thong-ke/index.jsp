@@ -82,20 +82,11 @@
     </section>
     <section class="mb-4">
         <div class="card">
-            <h4 class="card-header">Trạng Thái Hóa Đơn Tháng Này</h4>
-            <div class="card-body">
-                <div id="pieChart"></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="mb-4">
-        <div class="card">
             <h4 class="card-header d-flex justify-content-between align-items-center"><span>Thống kê doanh thu</span>
                 <span>
                     <select class="form-select" id="phanLoai">
-                        <option value="1">Theo ngày</option>
-                        <option selected value="2">Theo tháng</option>
+                        <option selected value="1">Theo ngày</option>
+                        <option value="2">Theo tháng</option>
                         <option value="3">Theo năm</option>
                     </select>
                 </span>
@@ -441,70 +432,6 @@
             }
         });
     }
-
-    function pieChart(series, labels, id) {
-        var options = {
-            series: series,
-            chart: {
-                width: 380,
-                type: 'pie',
-            },
-            labels: labels,
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        width: 300
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }]
-        };
-
-        document.querySelector("#" + id).innerHTML = '';
-        var chart = new ApexCharts(document.querySelector("#" + id), options);
-        chart.render();
-    }
-
-    function getTrangThaiHoaDonThang() {
-        $.ajax({
-            type: "GET",
-            url: "/hoa-don/thong-ke/trang-thai-thang",
-            success: function (response) {
-                console.log(response);
-                const data = response.data;
-
-                const labels = data.map(item => {
-                    switch (item.trangThai) {
-                        case 0: return 'Chờ xác nhận';
-                        case 1: return 'Đã xác nhận';
-                        case 3: return 'Chờ thanh toán';
-                        case 5: return 'Đang giao hàng';
-                        case 6: return 'Vận chuyển hoàn tất';
-                        case 8: return 'Đã hủy';
-                        case 9: return 'Mới tạo';
-                        case 10: return 'Hoàn tất';
-                        default: return 'Khác';
-                    }
-                });
-
-                const series = data.map(item => item.soLuong);
-
-                pieChart(series, labels, 'pieChart');
-            },
-            error: function (xhr, status, error) {
-                console.error(error);
-                alert("Lỗi khi tải trạng thái hóa đơn tháng này.");
-            }
-        });
-    }
-
-    window.onload = function () {
-        getAllThongKe(2);
-        getTrangThaiHoaDonThang();
-    };
 
 </script>
 </html>

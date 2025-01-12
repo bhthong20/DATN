@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/hoa-don")
@@ -189,35 +190,4 @@ public class HoaDonController {
             return "home/layout";
         }
     }
-
-    @GetMapping("/thong-ke/trang-thai-thang")
-    @ResponseBody
-    public Map<String, Object> getTrangThaiHoaDonThang() {
-        LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-        LocalDateTime endOfMonth = startOfMonth.plusMonths(1);
-
-        List<HoaDon> hoaDons = hoaDonService.loc(null, null, null, startOfMonth, endOfMonth);
-
-        // Tính số lượng và phần trăm cho từng trạng thái
-        Map<Integer, Long> trangThaiCount = hoaDons.stream()
-                .collect(Collectors.groupingBy(HoaDon::getTrangThai, Collectors.counting()));
-
-        long total = hoaDons.size();
-        Map<String, Object> result = new HashMap<>();
-        List<Map<String, Object>> data = new ArrayList<>();
-
-        trangThaiCount.forEach((trangThai, count) -> {
-            double percentage = ((double) count / total) * 100;
-            Map<String, Object> item = new HashMap<>();
-            item.put("trangThai", trangThai);
-            item.put("soLuong", count);
-            item.put("phanTram", Math.round(percentage * 100.0) / 100.0);
-            data.add(item);
-        });
-
-        result.put("data", data);
-        result.put("total", total);
-        return result;
-    }
-
 }
