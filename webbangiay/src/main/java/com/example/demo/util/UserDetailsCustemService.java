@@ -36,6 +36,11 @@ public class UserDetailsCustemService implements UserDetailsService {
         Optional<KhachHang> khachHang = khachHangRepository.findByTaiKhoan(username);
 
         if (khachHang.isPresent()) {
+            // Kiểm tra trạng thái tài khoản
+            if (khachHang.get().getTrangThai() == null || "1".equals(khachHang.get().getTrangThai())) {
+                throw new UsernameNotFoundException("Tài khoản của bạn đã bị ngưng hoạt động.");
+            }
+
             // Mã hóa lại mật khẩu (theo yêu cầu giữ nguyên)
             String hashedPassword = passwordEncoder.encode(khachHang.get().getMatKhau());
             khachHang.get().setMatKhau(hashedPassword);
@@ -56,6 +61,11 @@ public class UserDetailsCustemService implements UserDetailsService {
 
         if (nhanVien.isEmpty()) {
             throw new UsernameNotFoundException("Không tìm thấy người dùng với tên đăng nhập: " + username);
+        }
+
+        // Kiểm tra trạng thái tài khoản nhân viên (nếu cần)
+        if (nhanVien.get().getTinhTrang() == 1) {
+            throw new UsernameNotFoundException("Tài khoản của bạn đã bị ngưng hoạt động.");
         }
 
         // Lấy vai trò từ bảng `chuc_vu`

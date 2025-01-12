@@ -38,8 +38,12 @@ public class SecurityController {
 
     @GetMapping("/user-infor")
     @ResponseBody
-    public Object getUserInfor() {
-        return common.getUserLogin();
+    public ResponseEntity<?> getUserInfor() {
+        Object user = common.getUserLogin();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập");
+        }
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/update-user")

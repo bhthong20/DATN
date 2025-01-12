@@ -111,8 +111,7 @@
 
                         <div class="mb-3">
                             <div>
-                                <span class="text-danger">                            Tên người dùng và mật khẩu không hợp lệ.
-</span>
+                                <span class="text-danger">Tên người dùng hoặc mật khẩu không hợp lệ, hoặc tài khoản đã bị ngưng hoạt động.</span>
                             </div>
                         </div>
                         <% } %>
