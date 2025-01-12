@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/khach-hang/thong-tin-ca-nhan").permitAll()
                 .requestMatchers("/hoa-don/**").permitAll()
                 .requestMatchers("/gio-hang/**").hasRole("USER")
+                .requestMatchers("/ban-hang-online/**").hasAnyRole("USER", "STAFF", "ADMIN")
                 //.requestMatchers("/**").permitAll()
 
                 // Quyền dành cho nhân viên
