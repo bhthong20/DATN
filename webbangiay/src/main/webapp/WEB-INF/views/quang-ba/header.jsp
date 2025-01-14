@@ -78,7 +78,7 @@
         <div class="container justify-content-between p-0">
             <div class="d-flex">
                 <div class="site-brand">
-                    <a href="/home"><img src="/uploads/Diamond_Sneaker-removebg.png"></a>
+                    <a href="/home"><img src="uploads/85921081-a42e-48a5-9738-1030c26700fc.jpg" width="90px" height="50px"></a>
                 </div>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                     <ul class="navbar-nav text-center mb-2 mb-lg-0">

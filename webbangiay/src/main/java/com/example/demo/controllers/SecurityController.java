@@ -84,10 +84,14 @@ public class SecurityController {
         if (bindingResult.hasErrors()) {
             return "security/auth-resgit";
         }
-        KhachHang khachHang1 = service.addKhachHang(khachHang, bindingResult);
-        if (khachHang1 == null) {
-            return "security/auth-resgit";
+        if(khachHang == null){
+            khachHang.setTrangThai("0");
+            KhachHang khachHang1 = service.addKhachHang(khachHang, bindingResult);
+            if (khachHang1 == null) {
+                return "security/auth-resgit";
+            }
         }
+
         return "redirect:/login";
     }
 

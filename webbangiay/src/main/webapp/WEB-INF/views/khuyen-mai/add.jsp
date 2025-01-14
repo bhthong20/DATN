@@ -235,13 +235,29 @@
             isValid = false;
             ngayKetThucError.text('Ngày bắt đầu không được lớn hơn ngày kết thúc');
         }
+        if(giamTheoTien.is(':checked')){
+            const giaTriGiamValue = parseFloat(removeFormat(giaTriGiam.val()));
+            const dieuKienGiaValue = parseFloat(removeFormat(dieuKienGia.val()));
+
+            // Kiểm tra nếu giá trị giảm lớn hơn 80% giá trị của điều kiện giảm
+            if (giaTriGiamValue > dieuKienGiaValue * 0.8) {
+                isValid = false;
+                giaTriGiamError.text('Giá trị giảm không được lớn hơn 80% giá trị điều kiện giảm');
+            }
+        }
+
+
+
+
+
+
 
         // Kiểm tra giá trị giảm khi giamTheoPhanTram được chọn
         if (giamTheoPhamTram.is(':checked')) {
             const giaTriGiamValue = parseFloat(removeFormat(giaTriGiam.val()));
-            if (giaTriGiamValue < 0 || giaTriGiamValue > 100 || isNaN(giaTriGiamValue)) {
+            if (giaTriGiamValue < 0 || giaTriGiamValue > 70 || isNaN(giaTriGiamValue)) {
                 isValid = false;
-                giaTriGiamError.text('Giá trị giảm phải nằm trong khoảng từ 0 đến 100');
+                giaTriGiamError.text('Giá trị giảm phải nằm trong khoảng từ 0 đến 70');
             }
         }
 

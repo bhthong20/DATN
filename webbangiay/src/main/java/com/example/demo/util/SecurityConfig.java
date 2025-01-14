@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/home/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/scss/**").permitAll()
-                .requestMatchers("/ban-hang-online/**").permitAll()
+                .requestMatchers("/ban-hang-online/**").hasRole("USER")
                 .requestMatchers("/user-infor").permitAll()
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/vnpay-payment/**").permitAll()
@@ -43,12 +43,12 @@ public class SecurityConfig {
                 .requestMatchers("/khach-hang/**").permitAll()
                 .requestMatchers("/khach-hang/thong-tin-ca-nhan").permitAll()
                 .requestMatchers("/hoa-don/**").permitAll()
-                .requestMatchers("/gio-hang/**").hasRole("USER")
+                .requestMatchers("/gio-hang/**").permitAll()
                 .requestMatchers("/ban-hang-online/**").hasAnyRole("USER", "STAFF", "ADMIN")
                 //.requestMatchers("/**").permitAll()
 
                 // Quyền dành cho nhân viên
-                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF", "ADMIN") // Nhân viên bán hàng tại quầy
+                .requestMatchers("/ban-hang-tai-quay/**").hasAnyRole("STAFF") // Nhân viên bán hàng tại quầy
                 .requestMatchers("/khuyen-mai/**", "/thuong-hieu/**", "/chat-lieu/**",
                         "/kich-thuoc/**", "/mau-sac/**", "/loai/**",
                         "/chi-tiet-san-pham/**").hasAnyRole("STAFF", "ADMIN")
