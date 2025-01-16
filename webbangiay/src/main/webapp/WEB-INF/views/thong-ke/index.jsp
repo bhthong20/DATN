@@ -109,7 +109,7 @@
         <div class="row">
             <div style="min-height: 100%" class="col-8">
                 <div style="height: 100%" class="card">
-                    <h4 class="card-header">Danh sách sản phẩm đã bán</h4>
+                    <h4 class="card-header">Danh sách sản bán chạy</h4>
                     <div class="card-body">
                         <div class="table-responsive text-nowrap">
                             <table class="table">
@@ -334,27 +334,54 @@
         var chart = new ApexCharts(document.querySelector("#" + lineChart), options);
         chart.render();
     }
-
+    //
+    // function genderSanPham(listData) {
+    //     const tableProduct = document.getElementById("listSanPham");
+    //     let html = '';
+    //     let index = 0;
+    //     listData.forEach(product => {
+    //         index++;
+    //         html += `
+    //             <tr>
+    //                 <td>` + index + `</td>
+    //                 <td onclick="detailSanPham('` + product.id + `')" data-bs-toggle="modal" data-bs-target="#thongKeSanPham">
+    //                     <img src="../../../uploads/` + product.url + `" width="50" height="50"
+    //                     style="border-radius:50% 50% 50% 50%">
+    //                     <span class="text-primary cursor-pointer">` + product.tenSanPham + `</span>
+    //                 </td>
+    //                 <td>` + product.soLuongTon.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
+    //                 <td>` + product.soLuongBan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
+    //                 <td>` + product.doanhThu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
+    //             </tr>
+    //         `
+    //     });
+    //     tableProduct.innerHTML = html;
+    // }
     function genderSanPham(listData) {
         const tableProduct = document.getElementById("listSanPham");
         let html = '';
         let index = 0;
+
+        // Sắp xếp sản phẩm theo số lượng bán (soLuongBan) giảm dần
+        listData.sort((a, b) => b.soLuongBan - a.soLuongBan);
+
         listData.forEach(product => {
             index++;
             html += `
-                <tr>
-                    <td>` + index + `</td>
-                    <td onclick="detailSanPham('` + product.id + `')" data-bs-toggle="modal" data-bs-target="#thongKeSanPham">
-                        <img src="../../../uploads/` + product.url + `" width="50" height="50"
-                        style="border-radius:50% 50% 50% 50%">
-                        <span class="text-primary cursor-pointer">` + product.tenSanPham + `</span>
-                    </td>
-                    <td>` + product.soLuongTon.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
-                    <td>` + product.soLuongBan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
-                    <td>` + product.doanhThu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
-                </tr>
-            `
+            <tr>
+                <td>` + index + `</td>
+                <td onclick="detailSanPham('` + product.id + `')" data-bs-toggle="modal" data-bs-target="#thongKeSanPham">
+                    <img src="../../../uploads/` + product.url + `" width="50" height="50"
+                    style="border-radius:50% 50% 50% 50%">
+                    <span class="text-primary cursor-pointer">` + product.tenSanPham + `</span>
+                </td>
+                <td>` + product.soLuongTon.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
+                <td>` + product.soLuongBan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
+                <td>` + product.doanhThu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + `</td>
+            </tr>
+        `
         });
+
         tableProduct.innerHTML = html;
     }
 

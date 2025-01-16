@@ -67,7 +67,7 @@
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
-                        <img src="/uploads/Diamond_Sneaker-removebg.png">
+                        <img src="uploads/test.jpg">
                   <span class="app-brand-logo demo">
 
                   </span>

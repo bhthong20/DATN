@@ -395,70 +395,137 @@
         $('#giamGia').show();
     }
 
-
     function muaNgay() {
         let sanPham = getChiTietSanPhamSelect();
+
+        // Kiểm tra nếu sản phẩm hết hàng
         if (sanPham.soLuongTon <= 0) {
             alert("Sản phẩm đã hết hàng");
             return;
         }
-        let productShopping = []
-        let kt = confirm("Bạn có chắc chắn muốn tạo đơn hàng không?");
-        if (kt) {
-            productShopping.push({
-                chiTietSanPham: sanPham.id,
-                soLuong: sanPham.soLuongMua,
-                donGia: sanPham.donGia
-            })
-            $.ajax({
-                type: "POST",
-                url: "/ban-hang-online/rest/tao-hoa-don",
-                contentType: "application/json",
-                data: JSON.stringify(productShopping),
-                success: function (response) {
-                    alert("Tạo đơn hàng thành công");
-                    window.location.href = "/ban-hang-online/hoa-don-detail?id=" + response;
-                },
-                error: function (xhr, status, error) {
-                    if (xhr.responseJSON.status && xhr.responseJSON.status === 400) {
-                        alert(xhr.responseJSON.message)
+
+        // Kiểm tra trạng thái đăng nhập trước khi thực hiện hành động
+        $.ajax({
+            type: "GET",
+            url: "/ban-hang-online/rest/kiem-tra-dang-nhap", // URL kiểm tra đăng nhập
+            success: function (response) {
+                // Kiểm tra nếu người dùng đã đăng nhập
+                if (response.loggedIn) {
+                    // Nếu đã đăng nhập, tiếp tục thực hiện mua ngay
+                    let productShopping = []
+                    let kt = confirm("Bạn có chắc chắn muốn tạo đơn hàng không?");
+                    if (kt) {
+                        productShopping.push({
+                            chiTietSanPham: sanPham.id,
+                            soLuong: sanPham.soLuongMua,
+                            donGia: sanPham.donGia
+                        })
+                        $.ajax({
+                            type: "POST",
+                            url: "/ban-hang-online/rest/tao-hoa-don",
+                            contentType: "application/json",
+                            data: JSON.stringify(productShopping),
+                            success: function (response) {
+                                alert("Tạo đơn hàng thành công");
+                                window.location.href = "/ban-hang-online/hoa-don-detail?id=" + response;
+                            },
+                            error: function (xhr, status, error) {
+                                if (xhr.responseJSON.status && xhr.responseJSON.status === 400) {
+                                    alert(xhr.responseJSON.message)
+                                }
+                            }
+                        });
                     }
+                } else {
+                    // Nếu chưa đăng nhập, yêu cầu đăng nhập
+                    alert(response.message);
+                    window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
                 }
-            });
-        }
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra khi kiểm tra trạng thái đăng nhập.");
+            }
+        });
     }
 
+
+    // function themVaoGioHang() {
+    //     let chiTiet = getChiTietSanPhamSelect();
+    //     let data = {
+    //         chiTietSanPham: chiTiet.id,
+    //         soLuong: chiTiet.soLuongMua,
+    //         donGia: chiTiet.donGia
+    //     };
+    //
+    //     let kt = confirm("Bạn có chắc chắn muốn thêm vào giỏ hàng không?");
+    //     if (kt) {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/ban-hang-online/rest/them-gio-hang",
+    //             contentType: "application/json",
+    //             data: JSON.stringify(data), // Chuyển đổi dữ liệu thành chuỗi JSON
+    //             success: function (response) {
+    //                 alert("Sản phẩm đã được thêm vào giỏ hàng");
+    //                 location.reload();
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 if (xhr.responseJSON.status && xhr.responseJSON.status === 400) {
+    //                     alert(xhr.responseJSON.message)
+    //                 }
+    //             }
+    //         });
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    //
+    // }
     function themVaoGioHang() {
-        let chiTiet = getChiTietSanPhamSelect();
-        let data = {
-            chiTietSanPham: chiTiet.id,
-            soLuong: chiTiet.soLuongMua,
-            donGia: chiTiet.donGia
-        };
+        // Kiểm tra trạng thái đăng nhập trước
+        $.ajax({
+            type: "GET",
+            url: "/ban-hang-online/rest/kiem-tra-dang-nhap", // URL kiểm tra đăng nhập
+            success: function (response) {
+                // Kiểm tra nếu người dùng đã đăng nhập
+                if (response.loggedIn) {
+                    // Nếu đã đăng nhập, thực hiện thao tác thêm vào giỏ hàng
+                    let chiTiet = getChiTietSanPhamSelect();
+                    let data = {
+                        chiTietSanPham: chiTiet.id,
+                        soLuong: chiTiet.soLuongMua,
+                        donGia: chiTiet.donGia
+                    };
 
-        let kt = confirm("Bạn có chắc chắn muốn thêm vào giỏ hàng không?");
-        if (kt) {
-            $.ajax({
-                type: "POST",
-                url: "/ban-hang-online/rest/them-gio-hang",
-                contentType: "application/json",
-                data: JSON.stringify(data), // Chuyển đổi dữ liệu thành chuỗi JSON
-                success: function (response) {
-                    alert("Sản phẩm đã được thêm vào giỏ hàng");
-                    location.reload();
-                },
-                error: function (xhr, status, error) {
-                    if (xhr.responseJSON.status && xhr.responseJSON.status === 400) {
-                        alert(xhr.responseJSON.message)
+                    let kt = confirm("Bạn có chắc chắn muốn thêm vào giỏ hàng không?");
+                    if (kt) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/ban-hang-online/rest/them-gio-hang",
+                            contentType: "application/json",
+                            data: JSON.stringify(data), // Chuyển đổi dữ liệu thành chuỗi JSON
+                            success: function (response) {
+                                alert("Sản phẩm đã được thêm vào giỏ hàng");
+                                location.reload();
+                            },
+                            error: function (xhr, status, error) {
+                                if (xhr.responseJSON.status && xhr.responseJSON.status === 400) {
+                                    alert(xhr.responseJSON.message)
+                                }
+                            }
+                        });
                     }
+                } else {
+                    // Nếu chưa đăng nhập, yêu cầu đăng nhập
+                    alert(response.message);
+                    window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
                 }
-            });
-            return true;
-        } else {
-            return false;
-        }
-
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra khi kiểm tra trạng thái đăng nhập.");
+            }
+        });
     }
+
 
     function getChiTietSanPhamSelect() {
         const btnChatLieu = $('.btnChatLieu.checked').first().attr("identity");

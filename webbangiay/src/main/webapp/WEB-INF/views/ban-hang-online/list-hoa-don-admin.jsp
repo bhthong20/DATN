@@ -209,7 +209,7 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    <c:if test="${item.loai==0}"><a href="/ban-hang-tai-quay?id=${item.id}"
+                                    <c:if test="${item.loai==0}"><a href="/hoa-don/detail?id=${item.id}"
                                                                     class="btn btn-success">Chi
                                         tiết</a></c:if>
                                     <c:if test="${item.loai==1}"><a href="/hoa-don/detail?id=${item.id}"
@@ -293,7 +293,7 @@
                                         </c:choose>
                                     </td>
                                     <td>
-                                        <a href="/ban-hang-tai-quay?id=${item.id}" class="btn btn-success">Chi
+                                        <a href="/hoa-don/detail?id=${item.id}" class="btn btn-success">Chi
                                             tiết</a>
                                     </td>
                                 </tr>

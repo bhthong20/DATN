@@ -82,7 +82,7 @@
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
             <div class="app-brand demo">
                 <a href="" class="app-brand-link">
-                    <img src="/uploads/Diamond_Sneaker-removebg.png">
+                    <img src="uploads/test.jpg">
                 </a>
             </div>
 

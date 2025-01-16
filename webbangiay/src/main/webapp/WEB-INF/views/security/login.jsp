@@ -62,7 +62,7 @@
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="/home" class="app-brand-link">
-                            <img src="/uploads/Diamond_Sneaker-removebg.png">
+                            <img src="uploads/test.jpg">
                         </a>
                         <span class="app-brand-logo demo">
 
