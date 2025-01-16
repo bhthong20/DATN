@@ -480,9 +480,12 @@
                     switch (item.trangThai) {
                         case 0: return 'Chờ xác nhận';
                         case 1: return 'Đã xác nhận';
+                        case 2: return 'Đã thanh toán';
                         case 3: return 'Chờ thanh toán';
+                        case 4: return 'Chờ vận chuyển';
                         case 5: return 'Đang giao hàng';
                         case 6: return 'Vận chuyển hoàn tất';
+                        case 7: return 'Giao trễ';
                         case 8: return 'Đã hủy';
                         case 9: return 'Mới tạo';
                         case 10: return 'Hoàn tất';
