@@ -397,6 +397,14 @@
 
 
     function muaNgay() {
+        // Kiểm tra trạng thái đăng nhập
+        if (!getCookie("user_info")) {
+            // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+            alert("Bạn cần đăng nhập để thực hiện thao tác này.");
+            window.location.href = "/login";
+            return;
+        }
+
         let sanPham = getChiTietSanPhamSelect();
         if (sanPham.soLuongTon <= 0) {
             alert("Sản phẩm đã hết hàng");
@@ -429,6 +437,14 @@
     }
 
     function themVaoGioHang() {
+        // Kiểm tra trạng thái đăng nhập
+        if (!getCookie("user_info")) {
+            // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+            alert("Bạn cần đăng nhập để thực hiện thao tác này.");
+            window.location.href = "/login";
+            return;
+        }
+        
         let chiTiet = getChiTietSanPhamSelect();
         let data = {
             chiTietSanPham: chiTiet.id,
